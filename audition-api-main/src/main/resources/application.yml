@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: audition-api
+  config:
+    import: "optional:configserver:"
+  main:
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  mvc:
+    throw-exception-if-no-handler-found: true
+  sleuth:
+    sampler:
+      probability: 1.0
+  security:
+    user:
+      name: admin
+      password: admin123
+    roles: ADMIN
+server:
+  max-http-request-header-size: 16KB
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus #enable only info and health for security purposes. Consider that we may want to still access other actuator endpoints securely.
+      base-path: /admin
+    enabled-by-default: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
